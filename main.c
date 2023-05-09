@@ -16,12 +16,15 @@ int main(void)
 	push(&top, 5);
 	push(&top, 6);
 
-	pop(&top);
-	pop(&top);
-	pop(&top);
-	pop(&top);
-	pop(&top);
-	pop(&top);
+	printf("----------\n");
+
+	pop(&top); /*6*/
+	pop(&top); /*5*/
+	pop(&top); /*4*/
+	pop(&top); /*3*/
+	pop(&top); /*2*/
+	pop(&top); /*1*/
+	pop(&top); /*NULL*/
 
 	return (0);
 }
@@ -72,12 +75,13 @@ int pop(stack_t **top)
 	if ((*top)->prev != NULL)
 	{
 		(*top)->prev->next = NULL;
-		*top = (*top)->prev;
 	}
+	
+	*top = (*top)->prev;
 
 	free(tmp);
 
-	printf("pop -> %d\n", value);
+	printf("pop  -> %d\n", value);
 
 	return (value);
 }
