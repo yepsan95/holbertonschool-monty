@@ -1,48 +1,111 @@
 #include "monty.h"
 
+char **path;
+
 /**
  * main - entry point
+ * @ac: arguments count
+ * @av: arguments array
  *
- * Return: 0 on success
+ * Return: 0 on success, -1 on error
  */
-int main(void)
+int main(int ac, char **av)
 {
+	char *pathname = av[1];
 	stack_t *top = NULL;
+	char *line = "", *opcode = NULL;
+	int i;
+	unsigned int line_number = 0;
+	instruction_t functions[] = {
+		{"push", push},
+		{"pall", pall},
+		{"pop", pop},
+		{NULL, NULL},
+	};
 
-	push(&top, 1);
-	push(&top, 2);
-	push(&top, 3);
-	push(&top, 4);
-	push(&top, 5);
-	push(&top, 6);
+	if (ac != 2)
+	{
+		printf("Usage: ./a filename\n");
+		return (-1);
+	}
+	path = &pathname;
 
-	printf("----------\n");
+	line = read_line(line_number);
+	for (line_number = 1; line != NULL; line_number++)
+	{
+		opcode = strtok(line, " ");
+		for (i = 0; functions[i].opcode != NULL; i++)
+		{
+			if (strcmp(functions[i].opcode, opcode) == 0)
+			{
+				printf("ENCONTRÓ LA FUNCIÓN\n");
+				(functions[i].f)(&top, line_number);
+				break;
+			}
+		}
+		line = read_line(line_number);
+	}
 
-	pop(&top); /*6*/
-	pop(&top); /*5*/
-	pop(&top); /*4*/
-	pop(&top); /*3*/
-	pop(&top); /*2*/
-	pop(&top); /*1*/
-	pop(&top); /*NULL*/
+	free(line);
 
 	return (0);
 }
 
 /**
+ * read_file - reads the entire content of a file
+ * @pathname: pathname of the file to read
+ * @buffer: buffer to store the contents of the file
+ *
+ * Return: 0 on success, -1 on error
+ */
+char *read_line(unsigned int line_number)
+{
+	FILE *fp;
+	char *line_buf = NULL;
+	size_t line_buf_size = 0;
+	unsigned int line_count = 0;
+
+	fp = fopen((*path), "r");
+	if (fp == NULL)
+		return (NULL);
+
+	if (getline(&line_buf, &line_buf_size, fp) == -1)
+		return (NULL);
+	else
+	{	
+		for (line_count = 1; line_count < line_number; line_count++)
+		{
+			if (getline(&line_buf, &line_buf_size, fp) == -1)
+				return (NULL);
+		}
+	}
+
+	fclose(fp);
+
+	return (line_buf);
+}
+
+/**
  * push - adds a new node to the stack
  * @top: pointer to the last node added
- * @value: value of the node
+ * @line_number: line number in the monty file
  *
- * Return: 1 on success
+ * Return: void
  */
-int push(stack_t **top, int value)
+void push(stack_t **top, unsigned int line_number)
 {
 	stack_t *new_node = NULL;
+	char *line;
+	int value;
 
+	if (top == NULL)
+		return;
+	line = read_line(line_number);
+	strtok(line, " ");
+	value = atoi(strtok(NULL, " "));
 	new_node = malloc(sizeof(stack_t));
 	if (new_node == NULL)
-		return (-1);
+		return;
 	new_node->n = value;
 	new_node->next = NULL;
 	new_node->prev = *top;
@@ -52,36 +115,51 @@ int push(stack_t **top, int value)
 
 	printf("push -> %d\n", (*top)->n);
 
-	return (1);
+	free(line);
 }
 
 /**
  * pop - removes the last node of the stack
  * @top: pointer to the last node of the stack
+ * @line_number: line_number in the monty file
  *
- * Return: value of the removed node
+ * Return: void
  */
-int pop(stack_t **top)
+void pop(stack_t **top, UNUSED unsigned int line_number)
 {
 	stack_t *tmp;
 	int value;
 
 	if (*top == NULL)
-		return (0);
+		return;
 
 	value = (*top)->n;
 	tmp = *top;
 
 	if ((*top)->prev != NULL)
-	{
 		(*top)->prev->next = NULL;
-	}
-	
+
 	*top = (*top)->prev;
 
 	free(tmp);
 
 	printf("pop  -> %d\n", value);
+}
 
-	return (value);
+/**
+ * pall - prints all the elements on the stack
+ *        starting on the top
+ * @top: pointer to the last node of the stack
+ * @line_number: line_number in the monty file
+ *
+ * Return: void
+ */
+void pall(stack_t **top, UNUSED unsigned int line_number)
+{
+	stack_t *tmp;
+
+	tmp = *top;
+
+	for (; tmp != NULL; tmp = tmp->prev)
+		printf("%d\n", tmp->n);
 }
