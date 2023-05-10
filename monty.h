@@ -10,6 +10,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#define UNUSED __attribute__((unused))
+
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
  * @n: integer
@@ -40,7 +42,9 @@ typedef struct instruction_s
 	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
-int push(stack_t **top, int value);
-int pop(stack_t **top);
+void push(stack_t **top, unsigned int line_number);
+void pop(stack_t **top, unsigned int line_number);
+void pall(stack_t **top, unsigned int line_number);
+char *read_line(unsigned int line_number);
 
 #endif /*MONTY_H*/
