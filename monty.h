@@ -42,5 +42,7 @@ typedef struct instruction_s
 
 int push(stack_t **top, int value);
 int pop(stack_t **top);
+int pall(stack_t **top);
+char *read_line(char *pathname, unsigned int line_number);
 
-#endif /*MONTY_H*/
+#endif / MONTY_H /
