@@ -1,87 +1,86 @@
 #include "monty.h"
 
+char **path;
+
 /**
  * main - entry point
+ * @ac: arguments count
+ * @av: arguments array
  *
- * Return: 0 on success
+ * Return: 0 on success, -1 on error
  */
-int main(void)
+int main(int ac, char **av)
 {
+	char *pathname = av[1];
 	stack_t *top = NULL;
+	char *line = "", *opcode = NULL;
+	int i;
+	unsigned int line_number = 0;
+	instruction_t functions[] = {
+		{"push", push},
+		{"pall", pall},
+		{"pop", pop},
+		{NULL, NULL},
+	};
 
-	push(&top, 1);
-	push(&top, 2);
-	push(&top, 3);
-	push(&top, 4);
-	push(&top, 5);
-	push(&top, 6);
+	if (ac != 2)
+	{
+		printf("Usage: ./a filename\n");
+		return (-1);
+	}
+	path = &pathname;
 
-	printf("----------\n");
+	line = read_line(line_number);
+	for (line_number = 1; line != NULL; line_number++)
+	{
+		opcode = strtok(line, " ");
+		for (i = 0; functions[i].opcode != NULL; i++)
+		{
+			if (strcmp(functions[i].opcode, opcode) == 0)
+			{
+				printf("ENCONTRÓ LA FUNCIÓN\n");
+				(functions[i].f)(&top, line_number);
+				break;
+			}
+		}
+		line = read_line(line_number);
+	}
 
-	pop(&top); /*6*/
-	pop(&top); /*5*/
-	pop(&top); /*4*/
-	pop(&top); /*3*/
-	pop(&top); /*2*/
-	pop(&top); /*1*/
-	pop(&top); /*NULL*/
+	free(line);
 
 	return (0);
 }
 
 /**
- * push - adds a new node to the stack
- * @top: pointer to the last node added
- * @value: value of the node
+ * read_file - reads the entire content of a file
+ * @pathname: pathname of the file to read
+ * @buffer: buffer to store the contents of the file
  *
- * Return: 1 on success
+ * Return: 0 on success, -1 on error
  */
-int push(stack_t **top, int value)
+char *read_line(unsigned int line_number)
 {
-	stack_t *new_node = NULL;
+	FILE *fp;
+	char *line_buf = NULL;
+	size_t line_buf_size = 0;
+	unsigned int line_count = 0;
 
-	new_node = malloc(sizeof(stack_t));
-	if (new_node == NULL)
-		return (-1);
-	new_node->n = value;
-	new_node->next = NULL;
-	new_node->prev = *top;
-	if (*top != NULL)
-		(*top)->next = new_node;
-	*top = new_node;
+	fp = fopen((*path), "r");
+	if (fp == NULL)
+		return (NULL);
 
-	printf("push -> %d\n", (*top)->n);
-
-	return (1);
-}
-
-/**
- * pop - removes the last node of the stack
- * @top: pointer to the last node of the stack
- *
- * Return: value of the removed node
- */
-int pop(stack_t **top)
-{
-	stack_t *tmp;
-	int value;
-
-	if (*top == NULL)
-		return (0);
-
-	value = (*top)->n;
-	tmp = *top;
-
-	if ((*top)->prev != NULL)
-	{
-		(*top)->prev->next = NULL;
+	if (getline(&line_buf, &line_buf_size, fp) == -1)
+		return (NULL);
+	else
+	{	
+		for (line_count = 1; line_count < line_number; line_count++)
+		{
+			if (getline(&line_buf, &line_buf_size, fp) == -1)
+				return (NULL);
+		}
 	}
-	
-	*top = (*top)->prev;
 
-	free(tmp);
+	fclose(fp);
 
-	printf("pop  -> %d\n", value);
-
-	return (value);
+	return (line_buf);
 }
