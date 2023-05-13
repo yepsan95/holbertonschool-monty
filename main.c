@@ -31,17 +31,13 @@ int main(int ac, char **av)
 
 	file_buffer = read_file(pathname);
 	line_array = tokenize(file_buffer);
-
 	file_array = &line_array;
-
 
 	printf("main:\n\n");
 
 	for (i = 0; (*file_array)[i] != NULL; i++)
 		printf("%s\n", (*file_array)[i]);
-
 	printf("\n----------\n\n");
-
 	printf("program execution:\n\n");
 
 	for (line_number = 0; (*file_array)[line_number] != NULL; line_number++)
@@ -57,15 +53,21 @@ int main(int ac, char **av)
 			if (strcmp(functions[i].opcode, opcode) == 0)
 			{
 				printf("ENCONTRÓ LA FUNCIÓN\n\n");
-				free(opcode);
 				(functions[i].f)(&top, line_number);
 				break;
 			}
 		}
+		free(opcode);
 	}
 
+	printf("<<SALIÓ DEL BUCLE>>\n\n");
 	for (i = 0; line_array[i] != NULL; i++)
+	{
+		printf("%02d -> %s\n", i, line_array[i]);
 		free(line_array[i]);
+	}
+	printf("\nFUERA DEL FOR\n\n");
+
 	free(line_array);
 	free(file_buffer);
 
@@ -97,7 +99,7 @@ char *read_file(char *pathname)
 	if (read(fd, file_buffer, file_size) == -1)
 		return (NULL);
 
-	printf("read_file:\n\n%s", file_buffer);
+	printf("\nread_file:\n\n%s", file_buffer);
 	printf("\n----------\n\n");
 
 	if (close(fd) == -1)
@@ -106,6 +108,13 @@ char *read_file(char *pathname)
 	return (file_buffer);
 }
 
+/**
+ * tokenize - splits a string into tokens
+ *            where each token is a line
+ * @file_buffer: buffer containing the string
+ *
+ * Return: an array of tokens
+ */
 char **tokenize(char *file_buffer)
 {
 	char **line_array = NULL;
