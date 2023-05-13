@@ -1,7 +1,5 @@
 #include "monty.h"
 
-char **path;
-
 /**
  * main - entry point
  * @ac: arguments count
@@ -12,9 +10,11 @@ char **path;
 int main(int ac, char **av)
 {
 	char *pathname = av[1];
-	stack_t *top = NULL;
-	char *line = "", *opcode = NULL;
+	char *file_buffer = NULL;
+	char **line_array = NULL;
 	int i;
+	stack_t *top = NULL;
+	char *opcode = NULL;
 	unsigned int line_number = 0;
 	instruction_t functions[] = {
 		{"push", push},
@@ -28,59 +28,124 @@ int main(int ac, char **av)
 		printf("Usage: ./a filename\n");
 		return (-1);
 	}
-	path = &pathname;
 
-	line = read_line(line_number);
-	for (line_number = 1; line != NULL; line_number++)
+	file_buffer = read_file(pathname);
+	line_array = tokenize(file_buffer);
+
+	file_array = &line_array;
+
+
+	printf("main:\n\n");
+
+	for (i = 0; (*file_array)[i] != NULL; i++)
+		printf("%s\n", (*file_array)[i]);
+
+	printf("\n----------\n\n");
+
+	printf("program execution:\n\n");
+
+	for (line_number = 0; (*file_array)[line_number] != NULL; line_number++)
 	{
-		opcode = strtok(line, " ");
+		opcode = strdup((*file_array)[line_number]);
+		if (opcode == NULL)
+			return (-1);
+		strtok(opcode, " ");
+		printf("LÍNEA LEÍDA: %s\n\n", (*file_array)[line_number]);
+		printf("OPCODE %s\n\n", opcode);
 		for (i = 0; functions[i].opcode != NULL; i++)
 		{
 			if (strcmp(functions[i].opcode, opcode) == 0)
 			{
-				printf("ENCONTRÓ LA FUNCIÓN\n");
+				printf("ENCONTRÓ LA FUNCIÓN\n\n");
+				free(opcode);
 				(functions[i].f)(&top, line_number);
 				break;
 			}
 		}
-		line = read_line(line_number);
 	}
 
-	free(line);
+	for (i = 0; line_array[i] != NULL; i++)
+		free(line_array[i]);
+	free(line_array);
+	free(file_buffer);
 
 	return (0);
 }
 
 /**
- * read_file - reads the entire content of a file
+ * read_file - reads the entire content of a file into a buffer
  * @pathname: pathname of the file to read
- * @buffer: buffer to store the contents of the file
  *
- * Return: 0 on success, -1 on error
+ * Return: a string containing all the character in the file
  */
-char *read_line(unsigned int line_number)
+char *read_file(char *pathname)
 {
-	FILE *fp;
-	char *line_buf = NULL;
-	size_t line_buf_size = 0;
-	unsigned int line_count = 0;
+	int fd, file_size;
+	char *file_buffer = NULL;
+	struct stat st;
 
-	fp = fopen((*path), "r");
-	if (fp == NULL)
+	fd = open(pathname, O_RDONLY);
+	if (fd == -1)
+		return (NULL);
+	if (fstat(fd, &st) == -1)
+		return (NULL);
+	file_size = st.st_size;
+	file_buffer = malloc((file_size + 1) * sizeof(char));
+	if (file_buffer == NULL)
+		return (NULL);
+	file_buffer[file_size] = '\0';
+	if (read(fd, file_buffer, file_size) == -1)
 		return (NULL);
 
-	if (getline(&line_buf, &line_buf_size, fp) == -1)
+	printf("read_file:\n\n%s", file_buffer);
+	printf("\n----------\n\n");
+
+	if (close(fd) == -1)
 		return (NULL);
-	else
-	{	
-		for (line_count = 1; line_count < line_number; line_count++)
+
+	return (file_buffer);
+}
+
+char **tokenize(char *file_buffer)
+{
+	char **line_array = NULL;
+	unsigned int i, line_count = 0;
+
+	for (i = 0; file_buffer[i] != '\0'; i++)
+	{
+		if (file_buffer[i] == '\n')
+			line_count++;
+	}
+	line_array = malloc((line_count + 1) * sizeof(char *));
+	if (line_array == NULL)
+		return (NULL);
+	line_array[0] = strdup(strtok(file_buffer, "\n"));
+	if (line_array[0] == NULL)
+	{
+		free(line_array);
+		return (NULL);
+	}
+	for (i = 1; i < line_count; i++)
+	{
+		line_array[i] = strdup(strtok(NULL, "\n"));
+		if (line_array[i] == NULL)
 		{
-			if (getline(&line_buf, &line_buf_size, fp) == -1)
-				return (NULL);
+			while (i > 0)
+			{
+				free(line_array[i]);
+				i--;
+			}
+			free(line_array);
+			return (NULL);
 		}
 	}
+	line_array[i] = NULL;
 
-	fclose(fp);
+	printf("tokenize:\n\n");
 
-	return (line_buf);
+	for (i = 0; line_array[i] != NULL; i++)
+		printf("%s\n", line_array[i]);
+	printf("\n----------\n\n");
+
+	return (line_array);
 }

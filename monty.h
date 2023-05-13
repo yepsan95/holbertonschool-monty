@@ -1,6 +1,9 @@
 #ifndef MONTY_H
 #define MONTY_H
 
+char ***file_array;
+extern char ***file_array;
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -45,6 +48,8 @@ typedef struct instruction_s
 void push(stack_t **top, unsigned int line_number);
 void pop(stack_t **top, unsigned int line_number);
 void pall(stack_t **top, unsigned int line_number);
-char *read_line(unsigned int line_number);
+char *read_file(char *pathname);
+char **tokenizar(char *str, char *delim);
+char **tokenize(char *file_buffer);
 
 #endif /* MONTY_H */

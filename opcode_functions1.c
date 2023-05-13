@@ -7,18 +7,21 @@
  *
  * Return: void
  */
-
 void push(stack_t **top, unsigned int line_number)
 {
 	stack_t *new_node = NULL;
-	char *line;
+	char *line, *word;
 	int value;
 
+	printf("ENTRÓ A LA FUNCIÓN PUSH()\n\n");
 	if (top == NULL)
 		return;
-	line = read_line(line_number);
-	strtok(line, " ");
-	value = atoi(strtok(NULL, " "));
+	line = (*file_array)[line_number];
+	printf("\tLÍNEA LEÍDA: %s\n\n", line);
+	word = strtok(line, " ");
+	word = strtok(NULL, " ");
+	value = atoi(word);
+	printf("\tvalue is %d\n", value);
 	new_node = malloc(sizeof(stack_t));
 	if (new_node == NULL)
 		return;
@@ -29,7 +32,7 @@ void push(stack_t **top, unsigned int line_number)
 		(*top)->next = new_node;
 	*top = new_node;
 
-	printf("push -> %d\n", (*top)->n);
+	printf("\tpush -> %d\n", (*top)->n);
 
 	free(line);
 }
@@ -47,6 +50,7 @@ void pop(stack_t **top, UNUSED unsigned int line_number)
 	stack_t *tmp;
 	int value;
 
+	printf("ENTRÓ A LA FUNCIÓN POP()\n\n");
 	if (*top == NULL)
 		return;
 
@@ -60,7 +64,7 @@ void pop(stack_t **top, UNUSED unsigned int line_number)
 
 	free(tmp);
 
-	printf("pop  -> %d\n", value);
+	printf("\tpop  -> %d\n", value);
 }
 
 /**
@@ -76,8 +80,13 @@ void pall(stack_t **top, UNUSED unsigned int line_number)
 {
 	stack_t *tmp;
 
+	printf("ENTRÓ A LA FUNCIÓN PALL()\n\n");
+
+	if (*top == NULL || top == NULL)
+		return;
+
 	tmp = *top;
 
 	for (; tmp != NULL; tmp = tmp->prev)
-		printf("%d\n", tmp->n);
+		printf("\tSe eliminó %d\n", tmp->n);
 }
