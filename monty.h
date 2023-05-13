@@ -51,5 +51,6 @@ void pall(stack_t **top, unsigned int line_number);
 char *read_file(char *pathname);
 char **tokenizar(char *str, char *delim);
 char **tokenize(char *file_buffer);
+void malloc_failed(void);
 
 #endif /* MONTY_H */

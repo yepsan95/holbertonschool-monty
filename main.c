@@ -25,8 +25,8 @@ int main(int ac, char **av)
 
 	if (ac != 2)
 	{
-		printf("Usage: ./a filename\n");
-		return (-1);
+		printf("USAGE: monty file\n");
+		exit(EXIT_FAILURE);
 	}
 
 	file_buffer = read_file(pathname);
@@ -88,13 +88,16 @@ char *read_file(char *pathname)
 
 	fd = open(pathname, O_RDONLY);
 	if (fd == -1)
-		return (NULL);
+	{
+		perror("Error: Can't open file %s", pathname);
+		exit(EXIT_FAILURE);
+	}
 	if (fstat(fd, &st) == -1)
 		return (NULL);
 	file_size = st.st_size;
 	file_buffer = malloc((file_size + 1) * sizeof(char));
 	if (file_buffer == NULL)
-		return (NULL);
+		malloc_failed();
 	file_buffer[file_size] = '\0';
 	if (read(fd, file_buffer, file_size) == -1)
 		return (NULL);
@@ -127,12 +130,12 @@ char **tokenize(char *file_buffer)
 	}
 	line_array = malloc((line_count + 1) * sizeof(char *));
 	if (line_array == NULL)
-		return (NULL);
+		malloc_failed();
 	line_array[0] = strdup(strtok(file_buffer, "\n"));
 	if (line_array[0] == NULL)
 	{
 		free(line_array);
-		return (NULL);
+		malloc_failed();
 	}
 	for (i = 1; i < line_count; i++)
 	{
@@ -145,7 +148,7 @@ char **tokenize(char *file_buffer)
 				i--;
 			}
 			free(line_array);
-			return (NULL);
+			malloc_failed();
 		}
 	}
 	line_array[i] = NULL;

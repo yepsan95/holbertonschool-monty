@@ -18,7 +18,7 @@ void push(stack_t **top, unsigned int line_number)
 		return;
 	line = strdup((*file_array)[line_number]);
 	if (line == NULL)
-		return;
+		malloc_failed();
 	printf("\tLÍNEA LEÍDA: %s\n\n", line);
 	word = strtok(line, " ");
 	word = strtok(NULL, " ");
@@ -28,7 +28,7 @@ void push(stack_t **top, unsigned int line_number)
 	if (new_node == NULL)
 	{
 		free(line);
-		return;
+		malloc_failed();
 	}
 	new_node->n = value;
 	new_node->next = NULL;
