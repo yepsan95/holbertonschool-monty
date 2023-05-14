@@ -49,12 +49,13 @@ void push(stack_t **top, unsigned int line_number);
 void pop(stack_t **top, unsigned int line_number);
 void pall(stack_t **top, unsigned int line_number);
 void pint(stack_t **top, unsigned int line_number);
+void swap(stack_t **top, unsigned int line_number);
+void nop(UNUSED stack_t **top, UNUSED unsigned int line_number);
 char *read_file(char *pathname);
 char **tokenizar(char *str, char *delim);
 char **tokenize(char *file_buffer);
 void malloc_failed(void);
 void free_stack(stack_t **top, UNUSED unsigned int line_number);
 void del_whitespace(char *str);
-void swap(stack_t **top, unsigned int line_number);
 
 #endif /* MONTY_H */
