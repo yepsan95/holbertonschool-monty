@@ -89,7 +89,7 @@ char *read_file(char *pathname)
 	fd = open(pathname, O_RDONLY);
 	if (fd == -1)
 	{
-		perror("Error: Can't open file %s", pathname);
+		dprintf(STDERR_FILENO, "Error: Can't open file %s", pathname);
 		exit(EXIT_FAILURE);
 	}
 	if (fstat(fd, &st) == -1)

@@ -85,7 +85,7 @@ void pall(stack_t **top, UNUSED unsigned int line_number)
 {
 	stack_t *tmp;
 
-	printf("ENTRÓ A LA FUNCIÓN PALL()\n\n");
+	printf("ENTRÓ A LA FUNCIÓN PALL()\n");
 
 	if (*top == NULL || top == NULL)
 		return;
@@ -93,5 +93,5 @@ void pall(stack_t **top, UNUSED unsigned int line_number)
 	tmp = *top;
 
 	for (; tmp != NULL; tmp = tmp->prev)
-		printf("\tSe eliminó %d\n\n", tmp->n);
+		printf("%d\n", tmp->n);
 }
