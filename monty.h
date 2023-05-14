@@ -50,6 +50,7 @@ void pop(stack_t **top, unsigned int line_number);
 void pall(stack_t **top, unsigned int line_number);
 void pint(stack_t **top, unsigned int line_number);
 void swap(stack_t **top, unsigned int line_number);
+void add(stack_t **top, unsigned int line_number);
 void nop(UNUSED stack_t **top, UNUSED unsigned int line_number);
 char *read_file(char *pathname);
 char **tokenizar(char *str, char *delim);

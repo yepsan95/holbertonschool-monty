@@ -21,6 +21,7 @@ int main(int ac, char **av)
 		{"pop", pop},
 		{"pint", pint},
 		{"swap", swap},
+		{"add", add},
 		{"nop", nop},
 		{NULL, NULL},
 	};
