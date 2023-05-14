@@ -108,3 +108,23 @@ void pint(stack_t **top, unsigned int line_number)
 
 	printf("%d\n", (*top)->n);
 }
+
+void swap(stack_t **top, UNUSED unsigned int line_number)
+{
+	stack_t *tmp;
+
+	if ((*top)->prev == NULL)
+		return;
+	tmp = (*top)->prev;
+
+	(*top)->next = tmp;
+	if (tmp->prev != NULL)
+	{
+		(*top)->prev = tmp->prev;
+		tmp->prev->next = *top;
+	}
+	tmp->next = NULL;
+	tmp->prev = *top;
+
+	*top = tmp;
+}

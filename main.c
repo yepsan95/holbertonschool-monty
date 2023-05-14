@@ -12,7 +12,7 @@ int main(int ac, char **av)
 	char *pathname = av[1], *file_buffer = NULL;
 	char *opcode = NULL;
 	char **line_array = NULL;
-	int i;
+	int i, found_opcode;
 	stack_t *top = NULL;
 	unsigned int line_number = 0;
 	instruction_t functions[] = {
@@ -20,6 +20,7 @@ int main(int ac, char **av)
 		{"pall", pall},
 		{"pop", pop},
 		{"pint", pint},
+		{"swap", swap},
 		{NULL, NULL},
 	};
 
@@ -28,23 +29,35 @@ int main(int ac, char **av)
 		dprintf(STDERR_FILENO, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
+
 	file_buffer = read_file(pathname);
 	line_array = tokenize(file_buffer);
 	file_array = &line_array;
+
 	for (line_number = 0; (*file_array)[line_number] != NULL; line_number++)
 	{
 		opcode = strdup((*file_array)[line_number]);
 		if (opcode == NULL)
-			return (-1);
+		{
+			dprintf(STDERR_FILENO, "L%u: unknown instruction %s", line_number + 1, opcode);
+			exit(EXIT_FAILURE);
+		}
 		strtok(opcode, " ");
 		del_whitespace(opcode);
+		found_opcode = 0;
 		for (i = 0; functions[i].opcode != NULL; i++)
 		{
 			if (strcmp(functions[i].opcode, opcode) == 0)
 			{
 				(functions[i].f)(&top, line_number);
+				found_opcode = 1;
 				break;
 			}
+		}
+		if (found_opcode == 0)
+		{
+			dprintf(STDERR_FILENO, "L%u: unknown instruction %s\n", line_number + 1, opcode);
+			exit(EXIT_FAILURE);
 		}
 		free(opcode);
 	}
@@ -72,7 +85,7 @@ char *read_file(char *pathname)
 	fd = open(pathname, O_RDONLY);
 	if (fd == -1)
 	{
-		dprintf(STDERR_FILENO, "Error: Can't open file %s", pathname);
+		dprintf(STDERR_FILENO, "Error: Can't open file %s\n", pathname);
 		exit(EXIT_FAILURE);
 	}
 	if (fstat(fd, &st) == -1)

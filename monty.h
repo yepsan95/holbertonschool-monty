@@ -55,5 +55,6 @@ char **tokenize(char *file_buffer);
 void malloc_failed(void);
 void free_stack(stack_t **top, UNUSED unsigned int line_number);
 void del_whitespace(char *str);
+void swap(stack_t **top, unsigned int line_number);
 
 #endif /* MONTY_H */
