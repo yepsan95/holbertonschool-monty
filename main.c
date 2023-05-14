@@ -24,7 +24,7 @@ int main(int ac, char **av)
 
 	if (ac != 2)
 	{
-		printf("USAGE: monty file\n");
+		perror("USAGE: monty file");
 		exit(EXIT_FAILURE);
 	}
 	file_buffer = read_file(pathname);
