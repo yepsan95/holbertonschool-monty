@@ -109,6 +109,13 @@ void pint(stack_t **top, unsigned int line_number)
 	printf("%d\n", (*top)->n);
 }
 
+/**
+ * swap - swaps the two nodes at the top of a stack
+ * @top: pointer to the last node of the stack
+ * @line_number: line_number in the monty file
+ *
+ * Return: void
+ */
 void swap(stack_t **top, UNUSED unsigned int line_number)
 {
 	stack_t *tmp;
