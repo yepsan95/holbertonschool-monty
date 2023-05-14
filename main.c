@@ -147,7 +147,6 @@ char **tokenize(char *file_buffer)
 			free(line_array);
 			malloc_failed();
 		}
-		printf("%s\n", line_array[i]);
 	}
 	line_array[i] = NULL;
 
