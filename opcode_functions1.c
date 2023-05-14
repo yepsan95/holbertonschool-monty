@@ -51,7 +51,7 @@ void pop(stack_t **top, UNUSED unsigned int line_number)
 
 	if (*top == NULL)
 	{
-		dprintf(STDERR_FILENO, "L%u:  can't pop an empty stack\n", line_number + 1);
+		dprintf(STDERR_FILENO, "L%u: can't pop an empty stack\n", line_number + 1);
                 exit(EXIT_FAILURE);
 	}
 
