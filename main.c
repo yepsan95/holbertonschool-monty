@@ -128,7 +128,6 @@ char **tokenize(char *file_buffer)
 	if (line_array == NULL)
 		malloc_failed();
 	line_array[0] = strdup(strtok(file_buffer, "\n"));
-	printf("%s\n", line_array[0]);
 	if (line_array[0] == NULL)
 	{
 		free(line_array);
