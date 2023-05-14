@@ -52,5 +52,6 @@ char *read_file(char *pathname);
 char **tokenizar(char *str, char *delim);
 char **tokenize(char *file_buffer);
 void malloc_failed(void);
+void free_stack(stack_t **top, UNUSED unsigned int line_number);
 
 #endif /* MONTY_H */
