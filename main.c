@@ -19,6 +19,7 @@ int main(int ac, char **av)
 		{"push", push},
 		{"pall", pall},
 		{"pop", pop},
+		{"pint", pint},
 		{NULL, NULL},
 	};
 

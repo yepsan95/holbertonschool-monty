@@ -81,3 +81,22 @@ void pall(stack_t **top, UNUSED unsigned int line_number)
 	for (; tmp != NULL; tmp = tmp->prev)
 		printf("%d\n", tmp->n);
 }
+
+/**
+ * pint - prints the value at the top of the stack
+ * @top: pointer to the last node of the stack
+ * @line_number: line_number in the monty file
+ *
+ * Return: void
+ */
+
+void pint(stack_t **top, unsigned int line_number)
+{
+	if (*top == NULL || top == NULL)
+	{
+		dprintf(STDERR_FILENO, "L%u: can't pint, stack empty\n", line_number);
+		exit(EXIT_FAILURE);
+	}
+
+	printf("%d\n", (*top)->n);
+}

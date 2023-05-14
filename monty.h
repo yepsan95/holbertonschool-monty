@@ -48,6 +48,7 @@ typedef struct instruction_s
 void push(stack_t **top, unsigned int line_number);
 void pop(stack_t **top, unsigned int line_number);
 void pall(stack_t **top, unsigned int line_number);
+void pint(stack_t **top, unsigned int line_number);
 char *read_file(char *pathname);
 char **tokenizar(char *str, char *delim);
 char **tokenize(char *file_buffer);
