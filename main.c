@@ -37,6 +37,7 @@ int main(int ac, char **av)
 		if (opcode == NULL)
 			return (-1);
 		strtok(opcode, " ");
+		del_whitespace(opcode);
 		for (i = 0; functions[i].opcode != NULL; i++)
 		{
 			if (strcmp(functions[i].opcode, opcode) == 0)
