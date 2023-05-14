@@ -53,5 +53,6 @@ char **tokenizar(char *str, char *delim);
 char **tokenize(char *file_buffer);
 void malloc_failed(void);
 void free_stack(stack_t **top, UNUSED unsigned int line_number);
+void del_whitespace(char *str);
 
 #endif /* MONTY_H */
