@@ -20,6 +20,11 @@ void push(stack_t **top, unsigned int line_number)
 		malloc_failed();
 	word = strtok(line, " ");
 	word = strtok(NULL, " ");
+	if (word == NULL)
+	{
+		printf("%d: usage: push integer\n", line_number + 1);
+		exit(EXIT_FAILURE);
+	}
 	value = atoi(word);
 	new_node = malloc(sizeof(stack_t));
 	if (new_node == NULL)
