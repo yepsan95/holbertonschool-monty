@@ -50,7 +50,10 @@ void pop(stack_t **top, UNUSED unsigned int line_number)
 	stack_t *tmp;
 
 	if (*top == NULL)
-		return;
+	{
+		dprintf(STDERR_FILENO, "L%u: can't pint, stack empty\n", line_number + 1);
+                exit(EXIT_FAILURE);
+	}
 
 	tmp = *top;
 	if ((*top)->prev != NULL)
