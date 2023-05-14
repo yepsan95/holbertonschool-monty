@@ -9,6 +9,8 @@
  */
 void push(stack_t **top, unsigned int line_number)
 {
+	line_number--;
+
 	stack_t *new_node = NULL;
 	char *line, *word;
 	int value;
@@ -92,6 +94,8 @@ void pall(stack_t **top, UNUSED unsigned int line_number)
 
 void pint(stack_t **top, unsigned int line_number)
 {
+	line_number--;
+
 	if (*top == NULL || top == NULL)
 	{
 		dprintf(STDERR_FILENO, "L%u: can't pint, stack empty\n", line_number);
