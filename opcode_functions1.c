@@ -22,7 +22,8 @@ void push(stack_t **top, unsigned int line_number)
 	word = strtok(NULL, " ");
 	for (i = 0; word[i] != '\0'; i++)
 	{
-		if (!(word[i] >= '0' && word[i] <= '9'))
+		if (!((word[i] >= '0' && word[i] <= '9') ||
+					word[i] == '-'))
 			only_numbers = 0;
 	}
 	if (word == NULL || only_numbers == 0)
