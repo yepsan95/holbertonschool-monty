@@ -11,7 +11,7 @@ void push(stack_t **top, unsigned int line_number)
 {
 	stack_t *new_node = NULL;
 	char *line, *word;
-	int value;
+	int i, value, only_numbers = 1;
 
 	if (top == NULL)
 		return;
@@ -20,7 +20,12 @@ void push(stack_t **top, unsigned int line_number)
 		malloc_failed();
 	word = strtok(line, " ");
 	word = strtok(NULL, " ");
-	if (word == NULL)
+	for (i = 0; word[i] != '\0'; i++)
+	{
+		if (!(word[i] >= '0' && word[i] <= '9'))
+			only_numbers = 0;
+	}
+	if (word == NULL || only_numbers == 0)
 	{
 		dprintf(STDERR_FILENO, "L%d: usage: push integer\n", line_number);
 		exit(EXIT_FAILURE);
