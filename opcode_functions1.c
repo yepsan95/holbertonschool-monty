@@ -22,7 +22,7 @@ void push(stack_t **top, unsigned int line_number)
 	word = strtok(NULL, " ");
 	if (word == NULL)
 	{
-		dprintf(STDERR_FILENO, "L%d: usage: push integer\n", line_number + 1);
+		dprintf(STDERR_FILENO, "L%d: usage: push integer\n", line_number);
 		exit(EXIT_FAILURE);
 	}
 	value = atoi(word);
