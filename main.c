@@ -36,13 +36,22 @@ int main(int ac, char **av)
 	line_array = tokenize(file_buffer);
 	file_array = &line_array;
 
+	for (i = 0; (*file_array)[i] != NULL; i++)
+		printf("array[%d] == %s\n", i, (*file_array)[i]);
+
 	for (line_number = 0; (*file_array)[line_number] != NULL; line_number++)
 	{
 		opcode = strdup((*file_array)[line_number]);
 		if (opcode == NULL)
 		{
-			dprintf(STDERR_FILENO, "L%u: unknown instruction %s", line_number + 1, opcode);
-			exit(EXIT_FAILURE);
+			free(line_array);
+			free(file_buffer);
+			malloc_failed();
+		}
+		if (strcmp(opcode, "") == 0)
+		{
+			free(opcode);
+			continue;
 		}
 		strtok(opcode, " ");
 		del_whitespace(opcode);
@@ -116,19 +125,17 @@ char *read_file(char *pathname)
 char **tokenize(char *file_buffer)
 {
 	char **line_array = NULL;
-	unsigned int i, line_count = 0;
+	unsigned int i, j = 0, skip, line_count = 0;
 
 	for (i = 0; file_buffer[i] != '\0'; i++)
 	{
 		if (file_buffer[i] == '\n')
-		{
-			if (file_buffer[i + 1] != '\n')
-				line_count++;
-		}
+			line_count++;
 	}
 	line_array = malloc((line_count + 1) * sizeof(char *));
 	if (line_array == NULL)
 		malloc_failed();
+	skip = skip_empty_line(file_buffer, &j);
 	line_array[0] = strdup(strtok(file_buffer, "\n"));
 	if (line_array[0] == NULL)
 	{
@@ -137,6 +144,22 @@ char **tokenize(char *file_buffer)
 	}
 	for (i = 1; i < line_count; i++)
 	{
+		skip = skip_empty_line(file_buffer, &j);
+		if (skip == 1)
+		{
+			line_array[i] = strdup("");
+			if (line_array[i] == NULL)
+			{
+				while (i > 0)
+				{
+					free(line_array[i]);
+					i--;
+				}
+				free(line_array);
+				malloc_failed();
+			}
+			continue;
+		}
 		line_array[i] = strdup(strtok(NULL, "\n"));
 		if (line_array[i] == NULL)
 		{
@@ -152,4 +175,33 @@ char **tokenize(char *file_buffer)
 	line_array[i] = NULL;
 
 	return (line_array);
+}
+
+/**
+ * skip_empty_line - iterates through a file buffer
+ *                   and indentifies the empty lines
+ *                   so they can be skipped
+ * @file_buffer: file buffer to be used
+ * @j: pointer to an interator (index of file_buffer)
+ *
+ * Return: 1 if the line is empty, 0 otherwise
+ */
+int skip_empty_line(char *file_buffer, unsigned int *j)
+{
+	int skip = 0;
+
+	for (; file_buffer[*j] != '\0'; (*j)++)
+	{
+		if (file_buffer[*j] == '\n')
+		{
+			if (file_buffer[(*j) + 1] == '\n')
+				skip = 1;
+			else
+				skip = 0;
+			(*j)++;
+			break;
+		}
+	}
+
+	return (skip);
 }
