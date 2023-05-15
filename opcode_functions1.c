@@ -20,15 +20,19 @@ void push(stack_t **top, unsigned int line_number)
 		malloc_failed();
 	word = strtok(line, " ");
 	word = strtok(NULL, " ");
-	for (i = 0; word[i] != '\0'; i++)
+	printf("word = %s\n", word);
+	if (word != NULL)
 	{
-		if (!((word[i] >= '0' && word[i] <= '9') ||
-					word[i] == '-'))
-			only_numbers = 0;
+		for (i = 0; word[i] != '\0'; i++)
+		{
+			if (!((word[i] >= '0' && word[i] <= '9')
+						|| word[i] == '-'))
+				only_numbers = 0;
+		}
 	}
 	if (word == NULL || only_numbers == 0)
 	{
-		dprintf(STDERR_FILENO, "L%d: usage: push integer\n", line_number);
+		dprintf(STDERR_FILENO, "L%d: usage: push integer\n", line_number + 1);
 		exit(EXIT_FAILURE);
 	}
 	value = atoi(word);

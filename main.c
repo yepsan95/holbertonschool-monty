@@ -45,12 +45,7 @@ int main(int ac, char **av)
 			free(file_buffer);
 			malloc_failed();
 		}
-		if (strcmp(opcode, "") == 0)
-		{
-			free(opcode);
-			continue;
-		}
-		if (strtok(opcode, " ") == NULL)
+		if (strcmp(opcode, "") == 0 || strtok(opcode, " ") == NULL)
 		{
 			free(opcode);
 			continue;
