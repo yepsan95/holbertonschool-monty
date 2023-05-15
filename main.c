@@ -36,9 +36,6 @@ int main(int ac, char **av)
 	line_array = tokenize(file_buffer);
 	file_array = &line_array;
 
-	for (i = 0; (*file_array)[i] != NULL; i++)
-		printf("array[%d] == %s\n", i, (*file_array)[i]);
-
 	for (line_number = 0; (*file_array)[line_number] != NULL; line_number++)
 	{
 		opcode = strdup((*file_array)[line_number]);
