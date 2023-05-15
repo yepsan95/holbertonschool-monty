@@ -143,8 +143,13 @@ void swap(stack_t **top, UNUSED unsigned int line_number)
 		(*top)->prev = tmp->prev;
 		tmp->prev->next = *top;
 	}
-	tmp->next = NULL;
+	else
+	{
+		(*top)->prev = NULL;
+		
+	}
 	tmp->prev = *top;
+	tmp->next = NULL;
 
 	*top = tmp;
 }
