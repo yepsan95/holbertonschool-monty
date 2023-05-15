@@ -31,7 +31,7 @@ void push(stack_t **top, unsigned int line_number)
 	}
 	if (word == NULL || only_numbers == 0)
 	{
-		dprintf(STDERR_FILENO, "L%d: usage: push integer\n", line_number + 1);
+		dprintf(STDERR_FILENO, "L%d: usage: push integer\n", line_number);
 		exit(EXIT_FAILURE);
 	}
 	value = atoi(word);
