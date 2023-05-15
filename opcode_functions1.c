@@ -20,7 +20,6 @@ void push(stack_t **top, unsigned int line_number)
 		malloc_failed();
 	word = strtok(line, " ");
 	word = strtok(NULL, " ");
-	printf("word = %s\n", word);
 	if (word != NULL)
 	{
 		for (i = 0; word[i] != '\0'; i++)
