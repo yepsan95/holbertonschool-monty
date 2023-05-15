@@ -50,7 +50,11 @@ int main(int ac, char **av)
 			free(opcode);
 			continue;
 		}
-		strtok(opcode, " ");
+		if (strtok(opcode, " ") == NULL)
+		{
+			free(opcode);
+			continue;
+		}
 		del_whitespace(opcode);
 		found_opcode = 0;
 		for (i = 0; functions[i].opcode != NULL; i++)
