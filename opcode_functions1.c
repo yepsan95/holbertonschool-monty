@@ -29,6 +29,7 @@ void push(stack_t **top, unsigned int line_number)
 				only_numbers = 0;
 		}
 	}
+	printf("\tword: %s in line: %d\n", word, line_number);
 	if (word == NULL || only_numbers == 0)
 	{
 		dprintf(STDERR_FILENO, "L%d: usage: push integer\n", line_number + 1);
@@ -129,7 +130,7 @@ void swap(stack_t **top, UNUSED unsigned int line_number)
 {
 	stack_t *tmp;
 
-	if ((*top)->prev == NULL || *top == NULL)
+	if ((*top)->prev == NULL || *top == NULL || top == NULL)
 	{
 		dprintf(STDERR_FILENO,"L%u: can't swap, stack too short\n", line_number + 1);
 		exit(EXIT_FAILURE);
