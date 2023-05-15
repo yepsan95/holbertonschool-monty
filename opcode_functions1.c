@@ -29,7 +29,6 @@ void push(stack_t **top, unsigned int line_number)
 				only_numbers = 0;
 		}
 	}
-	printf("\tword: %s in line: %d\n", word, line_number);
 	if (word == NULL || only_numbers == 0)
 	{
 		dprintf(STDERR_FILENO, "L%d: usage: push integer\n", line_number + 1);
