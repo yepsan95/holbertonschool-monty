@@ -53,7 +53,7 @@ void sub(stack_t **top, unsigned int line_number)
 
 	if (*top == NULL || top == NULL || (*top)->prev == NULL)
 	{
-		dprintf(STDERR_FILENO, "L%u: can't add, stack too short\n", line_number + 1);
+		dprintf(STDERR_FILENO, "L%u: can't sub, stack too short\n", line_number + 1);
 		exit(EXIT_FAILURE);
 	}
 
