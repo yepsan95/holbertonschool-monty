@@ -52,7 +52,7 @@ void pchar(stack_t **top, unsigned int line_number)
 
 	if ((*top)->n < 1 || (*top)->n > 126)
 	{
-		dprintf(STDERR_FILENO, "L%u%s%n", line_number + 1, error);
+		dprintf(STDERR_FILENO, "L%u%s\n", line_number + 1, error);
 		exit(EXIT_FAILURE);
 	}
 
