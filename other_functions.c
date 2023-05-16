@@ -89,7 +89,7 @@ int skip_empty_line(char *file_buffer, unsigned int *j)
 	int first_char, skip = 0;
 
 	first_char = file_buffer[(*j)];
-	if (first_char == '\n')
+	if (first_char == '\n' || first_char == '#')
 	{
 		(*j)++;
 		skip = 1;
