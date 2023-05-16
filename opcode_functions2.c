@@ -10,18 +10,18 @@
 
 void add(stack_t **top, unsigned int line_number)
 {
-        stack_t *tmp;
+	stack_t *tmp;
 
-        if (*top == NULL || top == NULL || (*top)->prev == NULL)
-        {
-                dprintf(STDERR_FILENO, "L%u: can't add, stack too short\n", line_number + 1);
-                exit(EXIT_FAILURE);
-        }
+	if (*top == NULL || top == NULL || (*top)->prev == NULL)
+	{
+		dprintf(STDERR_FILENO, "L%u: can't add, stack too short\n", line_number + 1);
+		exit(EXIT_FAILURE);
+	}
 
-        tmp = *top;
-        *top = tmp->prev;
-        (*top)->next = NULL;
-        (*top)->n = (*top)->n + tmp->n;
+	tmp = *top;
+	*top = tmp->prev;
+	(*top)->next = NULL;
+	(*top)->n = (*top)->n + tmp->n;
 }
 
 /**
@@ -34,5 +34,4 @@ void add(stack_t **top, unsigned int line_number)
 
 void nop(UNUSED stack_t **top, UNUSED unsigned int line_number)
 {
-        return;
 }

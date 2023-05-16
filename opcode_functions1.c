@@ -66,7 +66,7 @@ void pop(stack_t **top, UNUSED unsigned int line_number)
 	if (*top == NULL)
 	{
 		dprintf(STDERR_FILENO, "L%u: can't pop an empty stack\n", line_number + 1);
-                exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 
 	tmp = *top;
@@ -128,10 +128,11 @@ void pint(stack_t **top, unsigned int line_number)
 void swap(stack_t **top, UNUSED unsigned int line_number)
 {
 	stack_t *tmp;
+	int n = line_number + 1;
 
 	if (*top == NULL || (*top)->prev == NULL)
 	{
-		dprintf(STDERR_FILENO,"L%u: can't swap, stack too short\n", line_number + 1);
+		dprintf(STDERR_FILENO, "L%u: can't swap, stack too short\n", n);
 		exit(EXIT_FAILURE);
 	}
 	tmp = (*top)->prev;
@@ -145,7 +146,6 @@ void swap(stack_t **top, UNUSED unsigned int line_number)
 	else
 	{
 		(*top)->prev = NULL;
-		
 	}
 	tmp->prev = *top;
 	tmp->next = NULL;

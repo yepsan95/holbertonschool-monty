@@ -10,31 +10,41 @@
 int main(int ac, char **av)
 {
 	char *pathname = av[1], *file_buffer = NULL;
-	char *opcode = NULL;
 	char **line_array = NULL;
-	int i, found_opcode;
+	unsigned int i;
 	stack_t *top = NULL;
-	unsigned int line_number = 0;
-	instruction_t functions[] = {
-		{"push", push},
-		{"pall", pall},
-		{"pop", pop},
-		{"pint", pint},
-		{"swap", swap},
-		{"add", add},
-		{"nop", nop},
-		{NULL, NULL},
-	};
 
 	if (ac != 2)
 	{
 		dprintf(STDERR_FILENO, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
-
 	file_buffer = read_file(pathname);
 	line_array = tokenize(file_buffer);
 	file_array = &line_array;
+	search(file_buffer, line_array, &top);
+	for (i = 0; line_array[i] != NULL; i++)
+		free(line_array[i]);
+	free_stack(&top, 0);
+	free(line_array);
+	free(file_buffer);
+
+	return (0);
+}
+
+/**
+ * search - searchs a file for an opcode in a file
+ * @file_buffer: buffer with the contents of the file
+ * @line_array: array of strings where each is a line
+ * @top: head of the stack
+ *
+ * Return: void
+ */
+void search(char *file_buffer, char **line_array, stack_t **top)
+{
+	unsigned int line_number;
+	char *opcode;
+	int found_opcode;
 
 	for (line_number = 0; (*file_array)[line_number] != NULL; line_number++)
 	{
@@ -52,29 +62,45 @@ int main(int ac, char **av)
 		}
 		del_whitespace(opcode);
 		found_opcode = 0;
-		for (i = 0; functions[i].opcode != NULL; i++)
-		{
-			if (strcmp(functions[i].opcode, opcode) == 0)
-			{
-				(functions[i].f)(&top, line_number);
-				found_opcode = 1;
-				break;
-			}
-		}
+		execute(opcode, line_number, top, &found_opcode);
 		if (found_opcode == 0)
-		{
-			dprintf(STDERR_FILENO, "L%u: unknown instruction %s\n", line_number + 1, opcode);
-			exit(EXIT_FAILURE);
-		}
+			unknown_instruction(line_number, opcode);
 		free(opcode);
 	}
-	for (i = 0; line_array[i] != NULL; i++)
-		free(line_array[i]);
-	free_stack(&top, 0);
-	free(line_array);
-	free(file_buffer);
+}
 
-	return (0);
+/**
+ * execute - executes and opcode
+ * @opcode: opcode to be executed
+ * @n: line number in the file
+ * @top: top element on the stack
+ * @f: its value is 1 if the opcode is found
+ *
+ * Return: void
+ */
+void execute(char *opcode, unsigned int n, stack_t **top, int *f)
+{
+	int i;
+	instruction_t functions[] = {
+		{"push", push},
+		{"pall", pall},
+		{"pop", pop},
+		{"pint", pint},
+		{"swap", swap},
+		{"add", add},
+		{"nop", nop},
+		{NULL, NULL},
+	};
+
+	for (i = 0; functions[i].opcode != NULL; i++)
+	{
+		if (strcmp(functions[i].opcode, opcode) == 0)
+		{
+			(functions[i].f)(top, n);
+			*f = 1;
+			break;
+		}
+	}
 }
 
 /**
@@ -121,7 +147,7 @@ char *read_file(char *pathname)
 char **tokenize(char *file_buffer)
 {
 	char **line_array = NULL;
-	char *strtok_arg;
+	char *strtok_arg = file_buffer;
 	unsigned int i, j = 0, skip, line_count = 0;
 
 	for (i = 0; file_buffer[i] != '\0'; i++)
@@ -132,28 +158,15 @@ char **tokenize(char *file_buffer)
 	line_array = malloc((line_count + 1) * sizeof(char *));
 	if (line_array == NULL)
 		malloc_failed();
-	strtok_arg = file_buffer;
 	for (i = 0; i < line_count; i++)
 	{
 		if (i > 0)
 			strtok_arg = NULL;
 		skip = skip_empty_line(file_buffer, &j);
 		if (skip == 1)
-		{
 			line_array[i] = strdup("");
-			if (line_array[i] == NULL)
-			{
-				while (i > 0)
-				{
-					free(line_array[i]);
-					i--;
-				}
-				free(line_array);
-				malloc_failed();
-			}
-			continue;
-		}
-		line_array[i] = strdup(strtok(strtok_arg, "\n"));
+		else
+			line_array[i] = strdup(strtok(strtok_arg, "\n"));
 		if (line_array[i] == NULL)
 		{
 			while (i > 0)
@@ -165,43 +178,8 @@ char **tokenize(char *file_buffer)
 			malloc_failed();
 		}
 	}
-
 	line_array[i] = NULL;
 
 	return (line_array);
 }
 
-/**
- * skip_empty_line - iterates through a file buffer
- *                   and indentifies the empty lines
- *                   so they can be skipped
- * @file_buffer: file buffer to be used
- * @j: pointer to an interator (index of file_buffer)
- *
- * Return: 1 if the line is empty, 0 otherwise
- */
-int skip_empty_line(char *file_buffer, unsigned int *j)
-{
-	int first_char, skip = 0;
-
-	first_char = file_buffer[(*j)];
-	if (first_char == '\n')
-	{
-		(*j)++;
-		skip = 1;
-	}
-	else
-	{
-		for (; file_buffer[(*j)] != '\0'; (*j)++)
-		{
-			if (file_buffer[(*j)] == '\n')
-			{
-				skip = 0;
-				(*j)++;
-				break;
-			}
-		}
-	}
-
-	return (skip);
-}
