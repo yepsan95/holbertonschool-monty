@@ -55,4 +55,5 @@ void pchar(stack_t **top, unsigned int line_number)
 	}
 
 	putchar((*top)->n);
+	putchar(10);
 }
