@@ -36,8 +36,14 @@ int main(int ac, char **av)
 	line_array = tokenize(file_buffer);
 	file_array = &line_array;
 
+	printf("MAIN:\n\n");
+	for (i = 0; line_array[i] != NULL; i++)
+		printf("%s\n", line_array[i]);
+	printf("\n----------\n\n");
+
 	for (line_number = 0; (*file_array)[line_number] != NULL; line_number++)
 	{
+		printf("line number: %d\n", line_number + 1);
 		opcode = strdup((*file_array)[line_number]);
 		if (opcode == NULL)
 		{
@@ -50,6 +56,7 @@ int main(int ac, char **av)
 			free(opcode);
 			continue;
 		}
+		printf("opcode: %s\n", opcode);
 		del_whitespace(opcode);
 		found_opcode = 0;
 		for (i = 0; functions[i].opcode != NULL; i++)
@@ -66,6 +73,7 @@ int main(int ac, char **av)
 			dprintf(STDERR_FILENO, "L%u: unknown instruction %s\n", line_number + 1, opcode);
 			exit(EXIT_FAILURE);
 		}
+		printf("The opcode <%s> has been freed\n", opcode);
 		free(opcode);
 	}
 	for (i = 0; line_array[i] != NULL; i++)
@@ -108,6 +116,9 @@ char *read_file(char *pathname)
 	if (close(fd) == -1)
 		return (NULL);
 
+	printf("READ:\n\n%s\n", file_buffer);
+	printf("\n----------\n\n");
+
 	return (file_buffer);
 }
 
@@ -121,6 +132,7 @@ char *read_file(char *pathname)
 char **tokenize(char *file_buffer)
 {
 	char **line_array = NULL;
+	char *strtok_arg;
 	unsigned int i, j = 0, skip, line_count = 0;
 
 	for (i = 0; file_buffer[i] != '\0'; i++)
@@ -128,22 +140,20 @@ char **tokenize(char *file_buffer)
 		if (file_buffer[i] == '\n')
 			line_count++;
 	}
+	printf("line_count: %u\n", line_count);
 	line_array = malloc((line_count + 1) * sizeof(char *));
 	if (line_array == NULL)
 		malloc_failed();
-	skip = skip_empty_line(file_buffer, &j);
-	line_array[0] = strdup(strtok(file_buffer, "\n"));
-	if (line_array[0] == NULL)
+	strtok_arg = file_buffer;
+	for (i = 0; i < line_count; i++)
 	{
-		free(line_array);
-		malloc_failed();
-	}
-	for (i = 1; i < line_count; i++)
-	{
+		if (i > 0)
+			strtok_arg = NULL;
 		skip = skip_empty_line(file_buffer, &j);
 		if (skip == 1)
 		{
 			line_array[i] = strdup("");
+			printf("line number: %u is empty\n", i + 1);
 			if (line_array[i] == NULL)
 			{
 				while (i > 0)
@@ -156,7 +166,7 @@ char **tokenize(char *file_buffer)
 			}
 			continue;
 		}
-		line_array[i] = strdup(strtok(NULL, "\n"));
+		line_array[i] = strdup(strtok(strtok_arg, "\n"));
 		if (line_array[i] == NULL)
 		{
 			while (i > 0)
@@ -168,7 +178,13 @@ char **tokenize(char *file_buffer)
 			malloc_failed();
 		}
 	}
+
 	line_array[i] = NULL;
+
+	printf("TONEKIZE:\n\n");
+	for (i = 0; line_array[i] != NULL; i++)
+		printf("%s\n", line_array[i]);
+	printf("\n----------\n\n");
 
 	return (line_array);
 }
@@ -184,18 +200,24 @@ char **tokenize(char *file_buffer)
  */
 int skip_empty_line(char *file_buffer, unsigned int *j)
 {
-	int skip = 0;
+	int first_char, skip = 0;
 
-	for (; file_buffer[*j] != '\0'; (*j)++)
+	first_char = file_buffer[(*j)];
+	if (first_char == '\n')
 	{
-		if (file_buffer[*j] == '\n')
+		(*j)++;
+		skip = 1;
+	}
+	else
+	{
+		for (; file_buffer[(*j)] != '\0'; (*j)++)
 		{
-			if (file_buffer[(*j) + 1] == '\n')
-				skip = 1;
-			else
+			if (file_buffer[(*j)] == '\n')
+			{
 				skip = 0;
-			(*j)++;
-			break;
+				(*j)++;
+				break;
+			}
 		}
 	}
 
