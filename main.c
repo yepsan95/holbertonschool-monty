@@ -90,6 +90,7 @@ void execute(char *opcode, unsigned int n, stack_t **top, int *f)
 		{"add", add},
 		{"nop", nop},
 		{"sub", sub},
+		{"div", div},
 		{NULL, NULL},
 	};
 
