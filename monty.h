@@ -55,6 +55,7 @@ void nop(UNUSED stack_t **top, unsigned int line_number);
 void sub(stack_t **top, unsigned int line_number);
 void div_(stack_t **top, unsigned int line_number);
 void mul(stack_t **top, unsigned int line_number);
+void mod(stack_t **top, unsigned int line_number);
 void search(char *file_buffer, char **line_array, stack_t **top);
 void execute(char *opcode, unsigned int n, stack_t **top, int *f);
 char *read_file(char *pathname);

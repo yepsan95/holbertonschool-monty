@@ -7,7 +7,6 @@
  *
  * Return: void
  */
-
 void add(stack_t **top, unsigned int line_number)
 {
 	stack_t *tmp;
@@ -66,7 +65,7 @@ void sub(stack_t **top, unsigned int line_number)
 }
 
 /**
- * div - divides the second top element of the stack
+ * div_ - divides the second top element of the stack
  *       by the top element of the stack
  * @top: pointer to the last node of the stack
  * @line_number: line_number in the monty file
