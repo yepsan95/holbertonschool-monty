@@ -60,7 +60,7 @@ void sub(stack_t **top, unsigned int line_number)
 	tmp = *top;
 	*top = tmp->prev;
 	(*top)->next = NULL;
-	(*top)->n = tmp->n - (*top)->n;
+	(*top)->n = (*top)->n - tmp->n;
 
 	free(tmp);
 }
