@@ -89,6 +89,7 @@ void execute(char *opcode, unsigned int n, stack_t **top, int *f)
 		{"swap", swap},
 		{"add", add},
 		{"nop", nop},
+		{"sub", sub},
 		{NULL, NULL},
 	};
 
