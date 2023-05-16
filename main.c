@@ -93,6 +93,7 @@ void execute(char *opcode, unsigned int n, stack_t **top, int *f)
 		{"div", div_},
 		{"mul", mul},
 		{"mod", mod},
+		{"pchar", pchar},
 		{NULL, NULL},
 	};
 

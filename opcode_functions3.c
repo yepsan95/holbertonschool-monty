@@ -31,3 +31,28 @@ void mod(stack_t **top, unsigned int line_number)
 
 	free(tmp);
 }
+
+/**
+ * pchar - prints the char at the top of the stack,
+ *         followed by a new line
+ * @top: pointer to the last node of the stack
+ * @line_number: line_number in the monty file
+ *
+ * Return: void
+ */
+void pchar(stack_t **top, unsigned int line_number)
+{
+	if (*top == NULL || top == NULL)
+	{
+		dprintf(STDERR_FILENO, "L%u: can't pchar, stack empty\n", line_number + 1);
+		exit(EXIT_FAILURE);
+	}
+
+	if ((*top)->n < 1 || (*top)->n > 126)
+	{
+		dprintf(STDERR_FILENO, "L%u: can't pchar, value out of range\n", line_number + 1);
+		exit(EXIT_FAILURE);
+	}
+
+	putchar((*top)->n);
+}
