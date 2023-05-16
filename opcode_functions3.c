@@ -42,6 +42,8 @@ void mod(stack_t **top, unsigned int line_number)
  */
 void pchar(stack_t **top, unsigned int line_number)
 {
+	char *error = ": can't pchar, value out of range";
+
 	if (*top == NULL || top == NULL)
 	{
 		dprintf(STDERR_FILENO, "L%u: can't pchar, stack empty\n", line_number + 1);
@@ -50,7 +52,7 @@ void pchar(stack_t **top, unsigned int line_number)
 
 	if ((*top)->n < 1 || (*top)->n > 126)
 	{
-		dprintf(STDERR_FILENO, "L%u: can't pchar, value out of range\n", line_number + 1);
+		dprintf(STDERR_FILENO, "L%u%s%n", line_number + 1, error);
 		exit(EXIT_FAILURE);
 	}
 
