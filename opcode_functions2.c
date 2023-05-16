@@ -84,6 +84,11 @@ void div_(stack_t **top, unsigned int line_number)
 	}
 
 	tmp = *top;
+	if (tmp->n == 0)
+	{
+		dprintf(STDERR_FILENO, "L%u: division by zero\n", line_number + 1);
+		exit(EXIT_FAILURE);
+	}
 	*top = tmp->prev;
 	(*top)->next = NULL;
 	(*top)->n = (*top)->n / tmp->n;
